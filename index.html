@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Wedding Invitation</title>
+  <title>Wedding RSVP</title>
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -62,21 +62,33 @@
         alert("Row parameter missing in the URL!");
         return;
       }
-      const scriptURL = "https://script.google.com/macros/s/AKfycbyWPhM8CImWFyke8uAMBPArTxWVZXNxpuTczksG5gM9RmwBGLuORNxRnkhxzdx4rNq_/exec";
+      
+      const scriptURL = "https://script.google.com/macros/s/AKfycbxd74e65IfIOqPv64cUMCxsaokIfw5z30Yeuwpw4hhhHYYczYvzk8-VoGK9SU2nGQyL/exec";
       const data = { row: rowNumber, column: "E", value: answer };
 
       try {
         // Send data to Google Apps Script
-        await fetch(scriptURL, {
+        const response = await fetch(scriptURL, {
           method: "POST",
-          headers: { "Content-Type": "application/json" },
+          headers: {
+            "Content-Type": "application/json",
+          },
           body: JSON.stringify(data),
         });
 
-        // Show thank you message
-        document.getElementById("thank-you-message").style.display = "block";
+        if (!response.ok) {
+          throw new Error(`Server error: ${response.status}`);
+        }
+
+        const result = await response.json();
+        if (result.status === "success") {
+          // Show thank you message
+          document.getElementById("thank-you-message").style.display = "block";
+        } else {
+          throw new Error(result.message || "Unknown error occurred");
+        }
       } catch (error) {
-        alert("An error occurred while submitting your response.");
+        alert(`An error occurred while submitting your response: ${error.message}`);
         console.error(error);
       }
     }
