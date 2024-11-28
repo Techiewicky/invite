@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Wedding Invitation</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      background-color: #f8f9fa;
+      margin: 0;
+      padding: 20px;
+    }
+    img {
+      max-width: 100%;
+      height: auto;
+      margin-bottom: 20px;
+    }
+    h1 {
+      font-size: 24px;
+      margin-bottom: 20px;
+    }
+    button {
+      font-size: 18px;
+      padding: 10px 20px;
+      margin: 10px;
+      cursor: pointer;
+      border: none;
+      border-radius: 5px;
+    }
+    .yes {
+      background-color: #28a745;
+      color: white;
+    }
+    .no {
+      background-color: #dc3545;
+      color: white;
+    }
+    .thank-you {
+      display: none;
+      font-size: 20px;
+      margin-top: 20px;
+    }
+  </style>
+</head>
+<body>
+  <img src="wedding_image.jpg" alt="Wedding Invitation">
+  <h1>Can you attend the wedding?</h1>
+  <button class="yes" onclick="submitAnswer('✅')">Yes</button>
+  <button class="no" onclick="submitAnswer('❌')">No</button>
+  <p class="thank-you" id="thank-you-message">Thank you for your response!</p>
+
+  <script>
+    // Extract the row parameter from the URL
+    const urlParams = new URLSearchParams(window.location.search);
+    const rowNumber = urlParams.get('row');
+
+    // Function to submit the answer
+    async function submitAnswer(answer) {
+      if (!rowNumber) {
+        alert("Row parameter missing in the URL!");
+        return;
+      }
+      const scriptURL = "https://script.google.com/macros/s/AKfycbyWPhM8CImWFyke8uAMBPArTxWVZXNxpuTczksG5gM9RmwBGLuORNxRnkhxzdx4rNq_/exec";
+      const data = { row: rowNumber, column: "E", value: answer };
+
+      try {
+        // Send data to Google Apps Script
+        await fetch(scriptURL, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(data),
+        });
+
+        // Show thank you message
+        document.getElementById("thank-you-message").style.display = "block";
+      } catch (error) {
+        alert("An error occurred while submitting your response.");
+        console.error(error);
+      }
+    }
+  </script>
+</body>
+</html>
