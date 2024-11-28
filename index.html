@@ -47,8 +47,8 @@
 <body>
   <img src="wedding_image.jpg" alt="Wedding Invitation">
   <h1>Can you attend the wedding?</h1>
-  <button class="yes" onclick="submitAnswer('✅')">Yes</button>
-  <button class="no" onclick="submitAnswer('❌')">No</button>
+  <button class="yes" onclick="submitAnswer('Yes')">Yes</button>
+  <button class="no" onclick="submitAnswer('No')">No</button>
   <p class="thank-you" id="thank-you-message">Thank you for your response!</p>
 
   <script>
@@ -63,7 +63,7 @@
         return;
       }
       
-      const scriptURL = "https://script.google.com/macros/s/AKfycbzdOEjAiudf25Z9134UUmazkEXA4bTvxlw0xBBChDfdjMmYUI4aXDXZyVIJLsNyk2Bi/exec";
+      const scriptURL = "https://script.google.com/macros/s/AKfycbzhMvNh8E54YxZLyw702VS1NqmDM4WIVPUZ9W3BX7VcwsHs0TNZmIobqZT6QxHlo1OY/exec";
       const data = { row: rowNumber, column: "E", value: answer };
 
       try {
