@@ -63,11 +63,10 @@
         return;
       }
 
-      const scriptURL = "https://script.google.com/macros/s/AKfycbzhMvNh8E54YxZLyw702VS1NqmDM4WIVPUZ9W3BX7VcwsHs0TNZmIobqZT6QxHlo1OY/exec";
+      const scriptURL = "https://script.google.com/macros/s/AKfycbxMPeWy9LpECkqyps6AIp1eKI1fGuVx4jMXq-jodZvM0EHAJqwGKDFMXuJnp1yItmHa/exec";
       const data = { row: rowNumber, column: "E", value: answer };
 
       try {
-        // Send data to Google Apps Script
         const response = await fetch(scriptURL, {
           method: "POST",
           headers: {
@@ -82,7 +81,6 @@
 
         const result = await response.json();
         if (result.status === "success") {
-          // Show thank you message
           document.getElementById("thank-you-message").style.display = "block";
         } else {
           throw new Error(result.message || "Unknown error occurred");
