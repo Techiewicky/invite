@@ -3,50 +3,68 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="رد على دعوة الزفاف بسهولة!">
+  <meta property="og:title" content="دعوة زفاف">
+  <meta property="og:description" content="رد على دعوة الزفاف بسهولة!">
+  <meta property="og:image" content="https://example.com/wedding_image.jpg">
+  <meta name="theme-color" content="#ffffff">
   <title>دعوة زفاف</title>
   <style>
     body {
       font-family: 'Arial', sans-serif;
       text-align: center;
-      background-color: #f8f9fa;
-      direction: rtl;
+      background-color: #f7f8fc;
       margin: 0;
       padding: 20px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
     }
     img {
       max-width: 100%;
       height: auto;
+      border-radius: 10px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
       margin-bottom: 20px;
     }
     h1 {
-      font-size: 24px;
+      font-size: 28px;
       margin-bottom: 20px;
+      color: #333;
     }
     button {
       font-size: 18px;
-      padding: 10px 20px;
+      padding: 15px 30px;
       margin: 10px;
       cursor: pointer;
       border: none;
       border-radius: 5px;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);
+      transition: all 0.3s ease;
+    }
+    button:hover {
+      transform: translateY(-3px);
     }
     .yes {
-      background-color: #28a745;
+      background-color: #4caf50;
       color: white;
     }
     .no {
-      background-color: #dc3545;
+      background-color: #f44336;
       color: white;
     }
     .thank-you {
       display: none;
       font-size: 20px;
       margin-top: 20px;
+      color: #333;
     }
   </style>
 </head>
 <body>
-  <img src="wedding_image.jpg" alt="دعوة زفاف">
+  <img src="https://example.com/wedding_image.jpg" alt="دعوة زفاف">
   <h1>هل يمكنك حضور حفل الزفاف؟</h1>
   <button class="yes" onclick="submitAnswer('نعم')">نعم</button>
   <button class="no" onclick="submitAnswer('لا')">لا</button>
@@ -70,8 +88,9 @@
       try {
         const response = await fetch(scriptURL, {
           method: "POST",
+          redirect: "follow", // Ensures redirects are handled
           headers: {
-            "Content-Type": "application/json",
+            "Content-Type": "text/plain;charset=utf-8", // Avoids preflight CORS requests
           },
           body: JSON.stringify(data),
         });
