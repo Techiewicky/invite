@@ -1,14 +1,15 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ar">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Wedding RSVP</title>
+  <title>دعوة زفاف</title>
   <style>
     body {
-      font-family: Arial, sans-serif;
+      font-family: 'Arial', sans-serif;
       text-align: center;
       background-color: #f8f9fa;
+      direction: rtl;
       margin: 0;
       padding: 20px;
     }
@@ -45,25 +46,25 @@
   </style>
 </head>
 <body>
-  <img src="wedding_image.jpg" alt="Wedding Invitation">
-  <h1>Can you attend the wedding?</h1>
-  <button class="yes" onclick="submitAnswer('Yes')">Yes</button>
-  <button class="no" onclick="submitAnswer('No')">No</button>
-  <p class="thank-you" id="thank-you-message">Thank you for your response!</p>
+  <img src="wedding_image.jpg" alt="دعوة زفاف">
+  <h1>هل يمكنك حضور حفل الزفاف؟</h1>
+  <button class="yes" onclick="submitAnswer('نعم')">نعم</button>
+  <button class="no" onclick="submitAnswer('لا')">لا</button>
+  <p class="thank-you" id="thank-you-message">شكرًا على ردك!</p>
 
   <script>
-    // Extract the row parameter from the URL
+    // استخراج رقم الصف من عنوان URL
     const urlParams = new URLSearchParams(window.location.search);
     const rowNumber = urlParams.get('row');
 
-    // Function to submit the answer
+    // وظيفة لإرسال الإجابة
     async function submitAnswer(answer) {
       if (!rowNumber) {
-        alert("Row parameter missing in the URL!");
+        alert("رقم الصف مفقود في عنوان URL!");
         return;
       }
 
-      const scriptURL = "https://script.google.com/macros/s/AKfycbxMPeWy9LpECkqyps6AIp1eKI1fGuVx4jMXq-jodZvM0EHAJqwGKDFMXuJnp1yItmHa/exec";
+      const scriptURL = "https://script.google.com/macros/s/AKfycbxITJZXpc49PxcZeAniHkf8005vriULr3oicRqDQNDBms6GGV-fvgWGHY1nINOtIQut/exec";
       const data = { row: rowNumber, column: "E", value: answer };
 
       try {
@@ -76,17 +77,17 @@
         });
 
         if (!response.ok) {
-          throw new Error(`Server error: ${response.status}`);
+          throw new Error(`خطأ في الخادم: ${response.status}`);
         }
 
         const result = await response.json();
         if (result.status === "success") {
           document.getElementById("thank-you-message").style.display = "block";
         } else {
-          throw new Error(result.message || "Unknown error occurred");
+          throw new Error(result.message || "حدث خطأ غير معروف");
         }
       } catch (error) {
-        alert(`An error occurred while submitting your response: ${error.message}`);
+        alert(`حدث خطأ أثناء إرسال ردك: ${error.message}`);
         console.error(error);
       }
     }
