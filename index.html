@@ -78,7 +78,7 @@
     // وظيفة لإرسال الإجابة
     async function submitAnswer(answer) {
       if (!rowNumber) {
-        alert("رقم الصف مفقود في عنوان URL!");
+        alert("اعد الدخول للرابط المرسل مرة أخرى!");
         return;
       }
 
@@ -106,7 +106,7 @@
           throw new Error(result.message || "حدث خطأ غير معروف");
         }
       } catch (error) {
-        alert(`حدث خطأ أثناء إرسال ردك: ${error.message}`);
+        alert(`ارسلي ردك بالواتس!`);
         console.error(error);
       }
     }
