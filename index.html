@@ -21,7 +21,6 @@
       justify-content: center;
       align-items: center;
       min-height: 100vh;
-      direction: rtl; /* لضمان الاتجاه الصحيح للنص العربي */
     }
     img {
       max-width: 100%;
@@ -38,12 +37,13 @@
     .button-container {
       display: flex;
       flex-direction: row;
-      justify-content: center;
+      gap: 20px;
       flex-wrap: wrap;
-      width: 100%;
-      max-width: 400px;
+      justify-content: center;
     }
     button {
+      position: relative;
+      overflow: hidden;
       font-size: 18px;
       padding: 15px 30px;
       margin: 10px;
@@ -51,25 +51,52 @@
       border: none;
       border-radius: 5px;
       box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);
-      transition: all 0.3s ease, transform 0.1s ease;
-      width: 100%;
-      max-width: 150px;
+      transition: transform 0.2s ease, box-shadow 0.2s ease, background-color 0.3s ease;
+      width: 120px;
+      height: 50px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-weight: bold;
+    }
+    button:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
     }
     button:active {
-      transform: scale(0.95);
-      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+      transform: scale(0.98);
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);
     }
-    button.yes {
+    button:focus {
+      outline: none;
+      box-shadow: 0 0 0 3px rgba(76, 175, 80, 0.5);
+    }
+    .yes {
       background-color: #4caf50;
-      color: white;
     }
-    button.no {
+    .no {
       background-color: #f44336;
-      color: white;
     }
-    button:disabled {
-      background-color: #cccccc;
-      cursor: not-allowed;
+    /* Ripple Effect */
+    .button::after {
+      content: "";
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 0;
+      height: 0;
+      background: rgba(255, 255, 255, 0.5);
+      border-radius: 50%;
+      transform: translate(-50%, -50%);
+      opacity: 0;
+      transition: width 0.4s ease, height 0.4s ease, opacity 0.8s ease;
+    }
+    .button:active::after {
+      width: 200px;
+      height: 200px;
+      opacity: 1;
+      transition: 0s;
     }
     .thank-you {
       display: none;
@@ -77,18 +104,16 @@
       margin-top: 20px;
       color: #333;
     }
-    /* تحسينات لمستخدمي الهواتف */
+    /* Media Queries for Mobile Devices */
     @media (max-width: 600px) {
-      h1 {
-        font-size: 24px;
-      }
       button {
+        width: 100px;
+        height: 45px;
         font-size: 16px;
         padding: 12px 25px;
-        max-width: 130px;
       }
-      .thank-you {
-        font-size: 18px;
+      h1 {
+        font-size: 24px;
       }
     }
   </style>
@@ -97,8 +122,8 @@
   <img src="invitiation.jfif" alt="دعوة زفاف">
   <h1>هل يمكنك حضور حفل الزفاف؟</h1>
   <div class="button-container">
-    <button class="yes" onclick="submitAnswer('نعم')">نعم</button>
-    <button class="no" onclick="submitAnswer('لا')">لا</button>
+    <button class="yes button" onclick="submitAnswer('نعم')">نعم</button>
+    <button class="no button" onclick="submitAnswer('لا')">لا</button>
   </div>
   <p class="thank-you" id="thank-you-message">شكرًا على ردك!</p>
 
@@ -110,17 +135,14 @@
     // وظيفة لإرسال الإجابة
     async function submitAnswer(answer) {
       if (!rowNumber) {
-        alert("يرجى إعادة الدخول إلى الرابط المرسل مرة أخرى!");
+        alert("اعد الدخول للرابط المرسل مرة أخرى!");
         return;
       }
 
       const scriptURL = "https://script.google.com/macros/s/AKfycbxITJZXpc49PxcZeAniHkf8005vriULr3oicRqDQNDBms6GGV-fvgWGHY1nINOtIQut/exec";
       const data = { row: rowNumber, column: "E", value: answer };
 
-      // تعطيل الأزرار لمنع الإجابات المكررة
-      disableButtons(true);
-
-       try {
+      try {
         const response = await fetch(scriptURL, {
           method: "POST",
           redirect: "follow", // Ensures redirects are handled
@@ -137,25 +159,13 @@
         const result = await response.json();
         if (result.status === "success") {
           document.getElementById("thank-you-message").style.display = "block";
-          // إخفاء الأزرار بعد الرد
-          document.querySelector('.button-container').style.display = 'none';
         } else {
           throw new Error(result.message || "حدث خطأ غير معروف");
         }
       } catch (error) {
-        alert(`حدث خطأ. يمكنك إرسال ردك عبر الواتساب!`);
+        alert(`ارسلي ردك بالواتس!`);
         console.error(error);
-      } finally {
-        disableButtons(false);
       }
-    }
-
-    // وظيفة لتعطيل أو تمكين الأزرار
-    function disableButtons(state) {
-      const buttons = document.querySelectorAll('button');
-      buttons.forEach(button => {
-        button.disabled = state;
-      });
     }
   </script>
 </body>
