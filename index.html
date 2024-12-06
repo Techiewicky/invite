@@ -33,6 +33,12 @@
       font-size: 28px;
       margin-bottom: 20px;
       color: #333;
+      transition: opacity 0.5s ease-in;
+    }
+    .hidden {
+      opacity: 0;
+      height: 0;
+      visibility: hidden;
     }
     .button-container {
       display: flex;
@@ -100,15 +106,17 @@
     }
     .thank-you {
       display: none;
-      font-size: 22px;
+      font-size: 26px; /* Increased font size for better visibility */
       margin-top: 20px;
       color: #333;
       opacity: 0;
-      transition: opacity 0.5s ease-in;
+      transition: opacity 0.5s ease-in, transform 0.5s ease-in;
+      transform: translateY(20px);
     }
     .thank-you.visible {
       display: block;
       opacity: 1;
+      transform: translateY(0);
     }
     /* Media Queries for Mobile Devices */
     @media (max-width: 600px) {
@@ -126,7 +134,7 @@
 </head>
 <body>
   <img src="invitiation.jfif" alt="دعوة زفاف">
-  <h1>هل يمكنك حضور حفل الزفاف؟</h1>
+  <h1 id="question">هل يمكنك حضور حفل الزفاف؟</h1>
   <div class="button-container" id="button-container">
     <button class="yes button" onclick="submitAnswer('نعم')">نعم</button>
     <button class="no button" onclick="submitAnswer('لا')">لا</button>
@@ -166,7 +174,9 @@
         if (result.status === "success") {
           // Hide buttons
           document.getElementById("button-container").style.display = "none";
-          // Show thank you message with fade-in effect
+          // Hide the question
+          document.getElementById("question").classList.add("hidden");
+          // Show thank you message with fade-in and slide-up effect
           const thankYouMessage = document.getElementById("thank-you-message");
           thankYouMessage.classList.add("visible");
         } else {
