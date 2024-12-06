@@ -100,9 +100,15 @@
     }
     .thank-you {
       display: none;
-      font-size: 20px;
+      font-size: 22px;
       margin-top: 20px;
       color: #333;
+      opacity: 0;
+      transition: opacity 0.5s ease-in;
+    }
+    .thank-you.visible {
+      display: block;
+      opacity: 1;
     }
     /* Media Queries for Mobile Devices */
     @media (max-width: 600px) {
@@ -121,7 +127,7 @@
 <body>
   <img src="invitiation.jfif" alt="دعوة زفاف">
   <h1>هل يمكنك حضور حفل الزفاف؟</h1>
-  <div class="button-container">
+  <div class="button-container" id="button-container">
     <button class="yes button" onclick="submitAnswer('نعم')">نعم</button>
     <button class="no button" onclick="submitAnswer('لا')">لا</button>
   </div>
@@ -158,7 +164,11 @@
 
         const result = await response.json();
         if (result.status === "success") {
-          document.getElementById("thank-you-message").style.display = "block";
+          // Hide buttons
+          document.getElementById("button-container").style.display = "none";
+          // Show thank you message with fade-in effect
+          const thankYouMessage = document.getElementById("thank-you-message");
+          thankYouMessage.classList.add("visible");
         } else {
           throw new Error(result.message || "حدث خطأ غير معروف");
         }
