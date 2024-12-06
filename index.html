@@ -21,6 +21,7 @@
       justify-content: center;
       align-items: center;
       min-height: 100vh;
+      direction: rtl; /* لضمان الاتجاه الصحيح للنص العربي */
     }
     img {
       max-width: 100%;
@@ -34,6 +35,14 @@
       margin-bottom: 20px;
       color: #333;
     }
+    .button-container {
+      display: flex;
+      flex-direction: row;
+      justify-content: center;
+      flex-wrap: wrap;
+      width: 100%;
+      max-width: 400px;
+    }
     button {
       font-size: 18px;
       padding: 15px 30px;
@@ -42,18 +51,25 @@
       border: none;
       border-radius: 5px;
       box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);
-      transition: all 0.3s ease;
+      transition: all 0.3s ease, transform 0.1s ease;
+      width: 100%;
+      max-width: 150px;
     }
-    button:hover {
-      transform: translateY(-3px);
+    button:active {
+      transform: scale(0.95);
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
     }
-    .yes {
+    button.yes {
       background-color: #4caf50;
       color: white;
     }
-    .no {
+    button.no {
       background-color: #f44336;
       color: white;
+    }
+    button:disabled {
+      background-color: #cccccc;
+      cursor: not-allowed;
     }
     .thank-you {
       display: none;
@@ -61,13 +77,29 @@
       margin-top: 20px;
       color: #333;
     }
+    /* تحسينات لمستخدمي الهواتف */
+    @media (max-width: 600px) {
+      h1 {
+        font-size: 24px;
+      }
+      button {
+        font-size: 16px;
+        padding: 12px 25px;
+        max-width: 130px;
+      }
+      .thank-you {
+        font-size: 18px;
+      }
+    }
   </style>
 </head>
 <body>
   <img src="invitiation.jfif" alt="دعوة زفاف">
   <h1>هل يمكنك حضور حفل الزفاف؟</h1>
-  <button class="yes" onclick="submitAnswer('نعم')">نعم</button>
-  <button class="no" onclick="submitAnswer('لا')">لا</button>
+  <div class="button-container">
+    <button class="yes" onclick="submitAnswer('نعم')">نعم</button>
+    <button class="no" onclick="submitAnswer('لا')">لا</button>
+  </div>
   <p class="thank-you" id="thank-you-message">شكرًا على ردك!</p>
 
   <script>
@@ -78,14 +110,17 @@
     // وظيفة لإرسال الإجابة
     async function submitAnswer(answer) {
       if (!rowNumber) {
-        alert("اعد الدخول للرابط المرسل مرة أخرى!");
+        alert("يرجى إعادة الدخول إلى الرابط المرسل مرة أخرى!");
         return;
       }
 
       const scriptURL = "https://script.google.com/macros/s/AKfycbxITJZXpc49PxcZeAniHkf8005vriULr3oicRqDQNDBms6GGV-fvgWGHY1nINOtIQut/exec";
       const data = { row: rowNumber, column: "E", value: answer };
 
-      try {
+      // تعطيل الأزرار لمنع الإجابات المكررة
+      disableButtons(true);
+
+       try {
         const response = await fetch(scriptURL, {
           method: "POST",
           redirect: "follow", // Ensures redirects are handled
@@ -102,13 +137,25 @@
         const result = await response.json();
         if (result.status === "success") {
           document.getElementById("thank-you-message").style.display = "block";
+          // إخفاء الأزرار بعد الرد
+          document.querySelector('.button-container').style.display = 'none';
         } else {
           throw new Error(result.message || "حدث خطأ غير معروف");
         }
       } catch (error) {
-        alert(`ارسلي ردك بالواتس!`);
+        alert(`حدث خطأ. يمكنك إرسال ردك عبر الواتساب!`);
         console.error(error);
+      } finally {
+        disableButtons(false);
       }
+    }
+
+    // وظيفة لتعطيل أو تمكين الأزرار
+    function disableButtons(state) {
+      const buttons = document.querySelectorAll('button');
+      buttons.forEach(button => {
+        button.disabled = state;
+      });
     }
   </script>
 </body>
